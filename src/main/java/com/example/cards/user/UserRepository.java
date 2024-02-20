@@ -1,6 +1,5 @@
-package com.example.cards.repository.User;
+package com.example.cards.user;
 
-import com.example.cards.modle.User.UserModel;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

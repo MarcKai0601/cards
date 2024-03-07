@@ -1,5 +1,6 @@
 package com.example.cards.user;
 
+import com.example.cards.user.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -9,16 +10,44 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 import java.util.Set;
 
+//@Service
+//@Validated
+//public class UserService {
+////    @Autowired
+////    private UserRepository userRepository;
+//    @Autowired
+//    private UserMapper userMapper;
+//
+//    @Autowired
+//    private Validator validator;
+//
+//    public Integer addUser(UserModel user) {
+//        Set<ConstraintViolation<UserModel>> violations = validator.validate(user);
+//        if (!violations.isEmpty()) {
+//            StringBuilder sb = new StringBuilder();
+//            for (ConstraintViolation<UserModel> constraintViolation : violations) {
+//                sb.append(constraintViolation.getMessage());
+//            }
+//            throw new ConstraintViolationException(sb.toString(), violations);
+//        }
+////        UserModel newUser = userRepository.save(user);
+//        int newUser = userMapper.insertUser(user);
+//
+//        return newUser.getId();
+//    }
+//}
+
 @Service
 @Validated
 public class UserService {
     @Autowired
-    private UserRepository userRepository;
+    private UserMapper userMapper;
 
     @Autowired
     private Validator validator;
 
-    public Integer addUser(UserModel user) {
+    public void addUser(UserModel user) {
+        // 驗證 UserModel 對象
         Set<ConstraintViolation<UserModel>> violations = validator.validate(user);
         if (!violations.isEmpty()) {
             StringBuilder sb = new StringBuilder();
@@ -27,7 +56,8 @@ public class UserService {
             }
             throw new ConstraintViolationException(sb.toString(), violations);
         }
-        UserModel newUser = userRepository.save(user);
-        return newUser.getId();
+
+        // 使用 UserMapper 進行插入操作
+        userMapper.insertUser(user);
     }
 }

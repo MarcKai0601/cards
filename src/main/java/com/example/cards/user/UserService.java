@@ -10,33 +10,6 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 import java.util.Set;
 
-//@Service
-//@Validated
-//public class UserService {
-////    @Autowired
-////    private UserRepository userRepository;
-//    @Autowired
-//    private UserMapper userMapper;
-//
-//    @Autowired
-//    private Validator validator;
-//
-//    public Integer addUser(UserModel user) {
-//        Set<ConstraintViolation<UserModel>> violations = validator.validate(user);
-//        if (!violations.isEmpty()) {
-//            StringBuilder sb = new StringBuilder();
-//            for (ConstraintViolation<UserModel> constraintViolation : violations) {
-//                sb.append(constraintViolation.getMessage());
-//            }
-//            throw new ConstraintViolationException(sb.toString(), violations);
-//        }
-////        UserModel newUser = userRepository.save(user);
-//        int newUser = userMapper.insertUser(user);
-//
-//        return newUser.getId();
-//    }
-//}
-
 @Service
 @Validated
 public class UserService {
@@ -55,6 +28,16 @@ public class UserService {
                 sb.append(constraintViolation.getMessage());
             }
             throw new ConstraintViolationException(sb.toString(), violations);
+        }
+
+        // 檢查是否已存在相同的使用者名稱或電子郵件
+        UserModel existingUser = userMapper.findByUsername(user.getUsername());
+        if (existingUser != null) {
+            throw new IllegalArgumentException("使用者名稱已存在");
+        }
+        existingUser = userMapper.findByEmail(user.getEmail());
+        if (existingUser != null) {
+            throw new IllegalArgumentException("電子郵件已被使用");
         }
 
         // 使用 UserMapper 進行插入操作

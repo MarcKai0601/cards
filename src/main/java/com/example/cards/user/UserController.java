@@ -30,7 +30,14 @@ public class UserController {
             redirectAttributes.addFlashAttribute("error", message);
             return "redirect:/register";
         }
-        userService.addUser(user);
-        return "redirect:/";
+        try {
+            userService.addUser(user);
+            return "redirect:/";
+        } catch (IllegalArgumentException e) {
+            // 捕獲重複註冊的異常，並將對應的錯誤訊息添加到模型中
+            String errorMessage = e.getMessage(); // 錯誤訊息已經在 UserService.addUser 方法中設置
+            redirectAttributes.addFlashAttribute("error", errorMessage);
+            return "redirect:/register";
+        }
     }
 }

@@ -3,6 +3,7 @@ package com.example.cards.user;
 import com.example.cards.user.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.ConstraintViolation;
@@ -40,7 +41,10 @@ public class UserService {
             throw new IllegalArgumentException("電子郵件已被使用");
         }
 
-        // 使用 UserMapper 進行插入操作
+        // 使用 UserMapper 进行插入操作
+        // 在这里对用户密码进行加密
+        String MD5Password = DigestUtils.md5DigestAsHex(user.getPassword().getBytes());
+        user.setPassword(MD5Password); // 将加密后的密码设置回 UserModel 对象
         userMapper.insertUser(user);
     }
 }
